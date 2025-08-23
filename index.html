@@ -1,18 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Baby Food Price Tracker MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baby Formula Price Tracker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Baby Food Price Tracker</h1>
-  <p>Welcome! This is your MVP page.</p>
+  <header>
+    <h1>Baby Formula Price Tracker</h1>
+    <p>Find the cheapest baby formula by price per ounce.</p>
+  </header>
 
-  <h2>Sample Price Data</h2>
-  <ul id="prices">
-    <li>Gerber Applesauce – $1.99</li>
-    <li>Beech-Nut Carrots – $2.49</li>
-    <li>Earth's Best Peas – $2.99</li>
-  </ul>
+  <section class="filters">
+    <input type="text" placeholder="Search..." id="search">
+    <select id="brand">
+      <option value="">brand</option>
+      <option value="similac">Similac</option>
+      <option value="enfamil">Enfamil</option>
+      <option value="earthsbest">Earth's Best</option>
+    </select>
+    <select id="rating">
+      <option value="">rating</option>
+      <option value="5">5 stars</option>
+      <option value="4">4 stars</option>
+      <option value="3">3 stars</option>
+    </select>
+  </section>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Size</th>
+        <th>Price</th>
+        <th>Price/oz</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img src="https://via.placeholder.com/50" alt="Similac"></td>
+        <td>Similac Advance Powder</td>
+        <td>30oz</td>
+        <td>$29.99</td>
+        <td><button>Buy</button></td>
+      </tr>
+      <tr>
+        <td><img src="https://via.placeholder.com/50" alt="Enfamil"></td>
+        <td>Enfamil NeuroPro Powder</td>
+        <td>19.5oz</td>
+        <td>$26.49</td>
+        <td><button>Buy</button></td>
+      </tr>
+      <tr>
+        <td><img src="https://via.placeholder.com/50" alt="Earth's Best"></td>
+        <td>Earth's Best Organic</td>
+        <td>23oz</td>
+        <td>$27.95</td>
+        <td><button>Buy</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <footer>
+    <p>As an Amazon Associate I earn from qualifying purchases</p>
+  </footer>
 </body>
 </html>
