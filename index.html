@@ -13,12 +13,12 @@
   </header>
 
   <section class="filters">
-    <input type="text" placeholder="Search..." id="search">
+    <input type="text" id="search" placeholder="Search…">
     <select id="brand">
       <option value="">brand</option>
-      <option value="similac">Similac</option>
-      <option value="enfamil">Enfamil</option>
-      <option value="earthsbest">Earth's Best</option>
+      <option value="Similac">Similac</option>
+      <option value="Enfamil">Enfamil</option>
+      <option value="Earth's Best">Earth's Best</option>
     </select>
     <select id="rating">
       <option value="">rating</option>
@@ -38,25 +38,25 @@
         <th>Price/oz</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
+    <tbody id="product-list">
+      <tr data-brand="Similac" data-rating="5">
         <td><img src="https://via.placeholder.com/50" alt="Similac"></td>
         <td>Similac Advance Powder</td>
-        <td>30oz</td>
+        <td>30 oz</td>
         <td>$29.99</td>
         <td><button>Buy</button></td>
       </tr>
-      <tr>
+      <tr data-brand="Enfamil" data-rating="4">
         <td><img src="https://via.placeholder.com/50" alt="Enfamil"></td>
         <td>Enfamil NeuroPro Powder</td>
-        <td>19.5oz</td>
+        <td>19.5 oz</td>
         <td>$26.49</td>
         <td><button>Buy</button></td>
       </tr>
-      <tr>
+      <tr data-brand="Earth's Best" data-rating="5">
         <td><img src="https://via.placeholder.com/50" alt="Earth's Best"></td>
         <td>Earth's Best Organic</td>
-        <td>23oz</td>
+        <td>23 oz</td>
         <td>$27.95</td>
         <td><button>Buy</button></td>
       </tr>
@@ -66,5 +66,34 @@
   <footer>
     <p>As an Amazon Associate I earn from qualifying purchases</p>
   </footer>
+
+  <script>
+    const searchInput = document.getElementById('search');
+    const brandSelect = document.getElementById('brand');
+    const ratingSelect = document.getElementById('rating');
+    const rows = document.querySelectorAll('#product-list tr');
+
+    function filterProducts() {
+      const search = searchInput.value.toLowerCase();
+      const brand = brandSelect.value;
+      const rating = ratingSelect.value;
+
+      rows.forEach(row => {
+        const name = row.cells[1].textContent.toLowerCase();
+        const rowBrand = row.dataset.brand;
+        const rowRating = row.dataset.rating;
+
+        const matchesSearch = name.includes(search);
+        const matchesBrand = !brand || rowBrand === brand;
+        const matchesRating = !rating || rowRating === rating;
+
+        row.style.display = (matchesSearch && matchesBrand && matchesRating) ? '' : 'none';
+      });
+    }
+
+    [searchInput, brandSelect, ratingSelect].forEach(el =>
+      el.addEventListener('input', filterProducts)
+    );
+  </script>
 </body>
 </html>
