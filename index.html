@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Baby Formula Price Tracker</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <h1>Baby Formula Price Tracker</h1>
-    <p>Find the cheapest baby formula by price per ounce.</p>
+    <p>Find popular baby formulas and compare on Amazon (click “Check price”).</p>
   </header>
 
   <section class="filters">
-    <input type="text" id="search" placeholder="Search…">
-    <select id="brand">
+    <input type="text" id="search" placeholder="Search products…" aria-label="Search products" />
+    <select id="brand" aria-label="Filter by brand">
       <option value="">brand</option>
-      <option value="Similac">Similac</option>
-      <option value="Enfamil">Enfamil</option>
-      <option value="Earth's Best">Earth's Best</option>
+      <option>Similac</option>
+      <option>Enfamil</option>
+      <option>Gerber</option>
+      <option>Earth's Best</option>
+      <option>Kendamil</option>
+      <option>Bobbie</option>
+      <option>ByHeart</option>
+      <option>Happy Baby</option>
     </select>
-    <select id="rating">
-      <option value="">rating</option>
-      <option value="5">5 stars</option>
-      <option value="4">4 stars</option>
-      <option value="3">3 stars</option>
+    <select id="type" aria-label="Filter by type">
+      <option value="">type</option>
+      <option value="infant">Infant</option>
+      <option value="sensitive">Sensitive</option>
+      <option value="hypoallergenic">Hypoallergenic</option>
+      <option value="organic">Organic</option>
+      <option value="soy">Soy/Plant-based</option>
+      <option value="anti-reflux">Anti-reflux</option>
+      <option value="preterm">Preterm</option>
     </select>
   </section>
 
@@ -38,62 +47,116 @@
         <th>Price/oz</th>
       </tr>
     </thead>
-    <tbody id="product-list">
-      <tr data-brand="Similac" data-rating="5">
-        <td><img src="https://via.placeholder.com/50" alt="Similac"></td>
-        <td>Similac Advance Powder</td>
-        <td>30 oz</td>
-        <td>$29.99</td>
-        <td><button>Buy</button></td>
-      </tr>
-      <tr data-brand="Enfamil" data-rating="4">
-        <td><img src="https://via.placeholder.com/50" alt="Enfamil"></td>
-        <td>Enfamil NeuroPro Powder</td>
-        <td>19.5 oz</td>
-        <td>$26.49</td>
-        <td><button>Buy</button></td>
-      </tr>
-      <tr data-brand="Earth's Best" data-rating="5">
-        <td><img src="https://via.placeholder.com/50" alt="Earth's Best"></td>
-        <td>Earth's Best Organic</td>
-        <td>23 oz</td>
-        <td>$27.95</td>
-        <td><button>Buy</button></td>
-      </tr>
-    </tbody>
+    <tbody id="product-list"></tbody>
   </table>
 
   <footer>
-    <p>As an Amazon Associate I earn from qualifying purchases</p>
+    <p>As an Amazon Associate I earn from qualifying purchases.</p>
+    <p class="fineprint">Amazon prices change frequently. For compliance, click “Check price” to see current pricing on Amazon.</p>
   </footer>
 
   <script>
-    const searchInput = document.getElementById('search');
-    const brandSelect = document.getElementById('brand');
-    const ratingSelect = document.getElementById('rating');
-    const rows = document.querySelectorAll('#product-list tr');
+    // Tip: when you have an affiliate tag, append ?tag=YOURTAG-20 to each amazonUrl.
+    const PRODUCTS = [
+      // --- Similac ---
+      { brand: "Similac", name: "Similac 360 Total Care Infant Formula (Powder)", size: "30–36 oz", type: "infant",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+360+Total+Care+Infant+Formula+powder", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Similac", name: "Similac Advance Infant Formula (Powder)", size: "12–30 oz", type: "infant",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+Advance+Infant+Formula+powder", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Similac", name: "Similac Pro-Advance (HMO) (Powder)", size: "20–30 oz", type: "infant",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+Pro+Advance+Infant+Formula", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Similac", name: "Similac Sensitive (for Fussiness & Gas)", size: "12–30 oz", type: "sensitive",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+Sensitive+Infant+Formula", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Similac", name: "Similac Total Comfort", size: "12–30 oz", type: "sensitive",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+Total+Comfort", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Similac", name: "Similac Alimentum (Hypoallergenic)", size: "12–19 oz", type: "hypoallergenic",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+Alimentum+Infant+Formula", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Similac", name: "Similac NeoSure (for Preterm/Low Birth Weight)", size: "13–22 oz", type: "preterm",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+NeoSure+Infant+Formula", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Similac", name: "Similac Soy Isomil (Soy-based)", size: "12–30 oz", type: "soy",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+Soy+Isomil", img: "https://via.placeholder.com/50?text=S" },
 
-    function filterProducts() {
-      const search = searchInput.value.toLowerCase();
-      const brand = brandSelect.value;
-      const rating = ratingSelect.value;
+      // --- Enfamil ---
+      { brand: "Enfamil", name: "Enfamil NeuroPro Infant (Powder)", size: "20–31 oz", type: "infant",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+NeuroPro+Infant+Formula", img: "https://via.placeholder.com/50?text=E" },
+      { brand: "Enfamil", name: "Enfamil NeuroPro Gentlease", size: "19–30 oz", type: "sensitive",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+NeuroPro+Gentlease", img: "https://via.placeholder.com/50?text=E" },
+      { brand: "Enfamil", name: "Enfamil Enspire Optimum", size: "20–27 oz", type: "infant",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+Enspire+Optimum", img: "https://via.placeholder.com/50?text=E" },
+      { brand: "Enfamil", name: "Enfamil A.R. (Anti-Reflux)", size: "19–30 oz", type: "anti-reflux",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+AR+Infant+Formula", img: "https://via.placeholder.com/50?text=E" },
+      { brand: "Enfamil", name: "Enfamil Reguline (Softer Stools)", size: "19–30 oz", type: "sensitive",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+Reguline", img: "https://via.placeholder.com/50?text=E" },
+      { brand: "Enfamil", name: "Enfamil ProSobee (Soy-based)", size: "20–30 oz", type: "soy",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+Prosobee+Soy+Infant+Formula", img: "https://via.placeholder.com/50?text=E" },
+      { brand: "Enfamil", name: "Enfamil Nutramigen (Hypoallergenic)", size: "12–27 oz", type: "hypoallergenic",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+Nutramigen+Infant+Formula", img: "https://via.placeholder.com/50?text=E" },
 
-      rows.forEach(row => {
-        const name = row.cells[1].textContent.toLowerCase();
-        const rowBrand = row.dataset.brand;
-        const rowRating = row.dataset.rating;
+      // --- Gerber Good Start (Dr. Brown's) ---
+      { brand: "Gerber", name: "Gerber Good Start GentlePro", size: "20–32 oz", type: "sensitive",
+        amazonUrl: "https://www.amazon.com/s?k=Gerber+Good+Start+GentlePro", img: "https://via.placeholder.com/50?text=G" },
+      { brand: "Gerber", name: "Gerber Good Start SoothePro", size: "20–30 oz", type: "sensitive",
+        amazonUrl: "https://www.amazon.com/s?k=Gerber+Good+Start+SoothePro", img: "https://via.placeholder.com/50?text=G" },
+      { brand: "Gerber", name: "Gerber Good Start Plant-Based (Soy)", size: "20–27 oz", type: "soy",
+        amazonUrl: "https://www.amazon.com/s?k=Gerber+Good+Start+Soy+Infant+Formula", img: "https://via.placeholder.com/50?text=G" },
 
-        const matchesSearch = name.includes(search);
-        const matchesBrand = !brand || rowBrand === brand;
-        const matchesRating = !rating || rowRating === rating;
+      // --- Organic / Specialty ---
+      { brand: "Earth's Best", name: "Earth’s Best Organic Dairy Infant", size: "21–23 oz", type: "organic",
+        amazonUrl: "https://www.amazon.com/s?k=Earth%27s+Best+Organic+Infant+Formula", img: "https://via.placeholder.com/50?text=EB" },
+      { brand: "Earth's Best", name: "Earth’s Best Organic Sensitivity", size: "21–23 oz", type: "organic",
+        amazonUrl: "https://www.amazon.com/s?k=Earth%27s+Best+Organic+Sensitivity+Infant+Formula", img: "https://via.placeholder.com/50?text=EB" },
+      { brand: "Kendamil", name: "Kendamil Organic Infant Formula", size: "28–31 oz", type: "organic",
+        amazonUrl: "https://www.amazon.com/s?k=Kendamil+Organic+Infant+Formula", img: "https://via.placeholder.com/50?text=K" },
+      { brand: "Kendamil", name: "Kendamil Classic Infant Formula", size: "28–31 oz", type: "infant",
+        amazonUrl: "https://www.amazon.com/s?k=Kendamil+Classic+Infant+Formula", img: "https://via.placeholder.com/50?text=K" },
+      { brand: "Bobbie", name: "Bobbie Organic Infant Formula", size: "14.1 oz (single/pack)", type: "organic",
+        amazonUrl: "https://www.amazon.com/s?k=Bobbie+Organic+Infant+Formula", img: "https://via.placeholder.com/50?text=Bb" },
+      { brand: "ByHeart", name: "ByHeart Whole Nutrition Infant Formula", size: "20–24 oz", type: "infant",
+        amazonUrl: "https://www.amazon.com/s?k=ByHeart+Infant+Formula", img: "https://via.placeholder.com/50?text=BH" },
+      { brand: "Happy Baby", name: "Happy Baby Organic Infant Formula", size: "21–23 oz", type: "organic",
+        amazonUrl: "https://www.amazon.com/s?k=Happy+Baby+Organic+Infant+Formula", img: "https://via.placeholder.com/50?text=HB" },
 
-        row.style.display = (matchesSearch && matchesBrand && matchesRating) ? '' : 'none';
-      });
+      // --- Medical / Specialty hypoallergenic (often on Amazon, check availability) ---
+      { brand: "Similac", name: "Similac EleCare (Amino Acid-based)", size: "14–16 oz", type: "hypoallergenic",
+        amazonUrl: "https://www.amazon.com/s?k=Similac+EleCare+Infant+Formula", img: "https://via.placeholder.com/50?text=S" },
+      { brand: "Enfamil", name: "Enfamil PurAmino (Amino Acid-based)", size: "14–16 oz", type: "hypoallergenic",
+        amazonUrl: "https://www.amazon.com/s?k=Enfamil+PurAmino+Infant+Formula", img: "https://via.placeholder.com/50?text=E" },
+      { brand: "Nutricia", name: "Neocate Infant DHA/ARA (Amino Acid-based)", size: "14–16 oz", type: "hypoallergenic",
+        amazonUrl: "https://www.amazon.com/s?k=Neocate+Infant+Formula", img: "https://via.placeholder.com/50?text=N" }
+    ];
+
+    const listEl = document.getElementById("product-list");
+    const searchEl = document.getElementById("search");
+    const brandEl = document.getElementById("brand");
+    const typeEl = document.getElementById("type");
+
+    function render(products) {
+      listEl.innerHTML = products.map(p => `
+        <tr data-brand="${p.brand}" data-type="${p.type}">
+          <td><img src="${p.img}" alt="${p.brand}"></td>
+          <td>${p.name}</td>
+          <td>${p.size || "—"}</td>
+          <td><a class="btn" href="${p.amazonUrl}" target="_blank" rel="noopener noreferrer">Check price</a></td>
+          <td>—</td>
+        </tr>
+      `).join("");
     }
 
-    [searchInput, brandSelect, ratingSelect].forEach(el =>
-      el.addEventListener('input', filterProducts)
-    );
+    function applyFilters() {
+      const q = searchEl.value.trim().toLowerCase();
+      const b = brandEl.value;
+      const t = typeEl.value;
+      const filtered = PRODUCTS.filter(p => {
+        const matchesQ = !q || (p.name + " " + p.brand).toLowerCase().includes(q);
+        const matchesB = !b || p.brand === b;
+        const matchesT = !t || p.type === t;
+        return matchesQ && matchesB && matchesT;
+      });
+      render(filtered);
+    }
+
+    [searchEl, brandEl, typeEl].forEach(el => el.addEventListener("input", applyFilters));
+    render(PRODUCTS);
   </script>
 </body>
 </html>
